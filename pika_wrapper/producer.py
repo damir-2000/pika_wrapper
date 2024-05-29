@@ -40,7 +40,7 @@ class Producer:
     queue: Queue
 
     def __init__(self, app: RabbitMQProtocol) -> None:
-        self._app = app
+        self.app = app
 
     def publish(self, body: Any, headers: Optional[dict] = None):
         if isinstance(body, dict):
@@ -55,4 +55,4 @@ class Producer:
         elif not isinstance(body, str):
             raise TypeError
 
-        self._app.publish(body=body, headers=headers, queue=self.queue)
+        self.app.publish(body=body, headers=headers, queue=self.queue)

@@ -19,6 +19,7 @@ class RabbitMQ:
         virtual_host: str = "/",
         broker_id: Optional[str] = None,
         region: Optional[str] = None,
+        queue_prefix: str = ""
     ):
         self._user = user
         self._password = password
@@ -27,6 +28,7 @@ class RabbitMQ:
         self._virtual_host = virtual_host
         self._broker_id = broker_id
         self._region = region
+        self._queue_prefix = queue_prefix
         self._consumers: List[Type[ConsumerProtocol]] = []
 
     @contextmanager
@@ -95,7 +97,7 @@ class RabbitMQ:
         exchange = queue.exchange
 
         channel.queue_declare(
-            queue=queue.queue,
+            queue=f"{self._queue_prefix}|{queue.queue}",
             passive=queue.passive,
             durable=queue.durable,
             exclusive=queue.exclusive,

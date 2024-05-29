@@ -63,7 +63,7 @@ class Consumer:
     consumer_tag: Any | None = None
 
     def __init__(self, app: RabbitMQProtocol) -> None:
-        self._app = app
+        self.app = app
         self._handlers: list[handlerProtocol] = self._get_route_handlers()
 
     def _get_route_handlers(self) -> list[handlerProtocol]:
