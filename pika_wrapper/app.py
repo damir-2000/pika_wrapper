@@ -95,9 +95,9 @@ class RabbitMQ:
     def create_consumer(self, channel: BlockingChannel, consumer: ConsumerProtocol):
         queue = consumer.queue
         exchange = queue.exchange
-
+        queue_name = f"{self._queue_prefix}|{queue.queue}"
         channel.queue_declare(
-            queue=f"{self._queue_prefix}|{queue.queue}",
+            queue=queue_name,
             passive=queue.passive,
             durable=queue.durable,
             exclusive=queue.exclusive,
@@ -113,7 +113,7 @@ class RabbitMQ:
                 auto_delete=exchange.auto_delete,
             )
             channel.queue_bind(
-                queue=queue.queue,
+                queue=queue_name,
                 exchange=exchange.exchange,
                 routing_key=queue.routing_key,
             )
