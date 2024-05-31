@@ -119,7 +119,7 @@ class RabbitMQ:
             )
 
         channel.basic_consume(
-            queue=queue.queue,
+            queue=queue_name,
             on_message_callback=consumer.callback,
             auto_ack=consumer.auto_ack,
             exclusive=consumer.exclusive,
