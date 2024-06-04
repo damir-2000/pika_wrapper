@@ -98,11 +98,11 @@ class Consumer:
                 ):
                     handler.callback(body=body)
                     break
-        except ValidateError:
-            pass
+        except ValidateError as exp:
+            print(exp)
 
-        except Exception:
-            pass
+        except Exception as exp:
+            print(exp)
 
         if not self.auto_ack:
             channel.basic_ack(method.delivery_tag)
