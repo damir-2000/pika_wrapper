@@ -55,4 +55,9 @@ class Producer:
         elif not isinstance(body, str):
             raise TypeError
 
+        self.publish_signal(body=body, headers=headers, queue=self.queue)
+        
         self.app.publish(body=body, headers=headers, queue=self.queue)
+
+    def publish_signal(self, body: str, headers: Optional[dict], queue: Queue):
+        pass
