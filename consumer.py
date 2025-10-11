@@ -2,7 +2,7 @@ from kombu import Exchange, Queue
 
 from pika_wrapper import RabbitMQ, consumer
 from pydantic import BaseModel
-
+import time
 
 app = RabbitMQ()
 exchange = Exchange("test", "direct")
@@ -20,6 +20,7 @@ class TestConsumer(consumer.Consumer):
     @consumer.handler(headers=dict(action="action"))
     def test(self, body: TestDTO):
         print(body)
+        time.sleep(10)
     
 class TestConsumer2(consumer.Consumer):
     queue = queue2

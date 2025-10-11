@@ -55,8 +55,9 @@ class RabbitMQ:
     def create_consumers(self, channel: virtual.Channel) -> list[Consumer]:
         consumers = []
         for consumer in self._consumers:
-            consumer.queue.name = f"{self._queue_prefix}|{consumer.queue.name}"
-            kombu_consumer = Consumer(channel=channel, queues=consumer.queue)
+            if not consumer.queue.name.startswith(self._queue_prefix) and self._queue_prefix:
+                consumer.queue.name = f"{self._queue_prefix}|{consumer.queue.name}"
+            kombu_consumer = Consumer(channel=channel, queues=consumer.queue, prefetch_count=1)
             kombu_consumer.register_callback(consumer(app=self).callback)
             consumers.append(kombu_consumer)
         return consumers

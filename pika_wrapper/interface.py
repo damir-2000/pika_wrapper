@@ -39,7 +39,7 @@ class ConsumerProtocol(Protocol):
 
     def callback(
         self,
-        body: bytes, 
+        body: bytes,
         message: Message
     ):
         pass
