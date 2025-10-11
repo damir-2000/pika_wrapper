@@ -6,7 +6,7 @@ from typing import Any, Callable, List, Optional
 from pydantic import BaseModel
 
 from .interface import RabbitMQProtocol
-from .schema import Queue
+from kombu import Queue
 
 
 def args_type_validate_decorator(args_name: List[str]):

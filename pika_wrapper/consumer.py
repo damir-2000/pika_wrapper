@@ -5,14 +5,12 @@ from copy import deepcopy
 from inspect import get_annotations
 from typing import Any, Callable, Self
 
-from pika import channel, spec
 from pydantic import BaseModel, ValidationError
 
-from pika_wrapper.schema import Queue
+from kombu import Queue, Message
 
 from .exceptions import NotFunctionError, ValidateError
 from .interface import RabbitMQProtocol, handlerProtocol
-
 
 class handler:
     def __init__(self, headers: dict = {}) -> None:
@@ -85,12 +83,10 @@ class Consumer:
 
     def callback(
         self,
-        channel: channel.Channel,
-        method: spec.Basic.Deliver,
-        properties: spec.BasicProperties,
-        body: bytes,
+        body: bytes, 
+        message: Message,
     ):
-        headers = properties.headers if properties.headers else dict()
+        headers = message.headers if message.headers else dict()
         try:
             for handler in self._handlers:
                 if all(
@@ -105,4 +101,4 @@ class Consumer:
             print(exp)
 
         if not self.auto_ack:
-            channel.basic_ack(method.delivery_tag)
+            message.ack()

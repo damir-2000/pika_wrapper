@@ -3,10 +3,10 @@ from __future__ import annotations
 from contextlib import contextmanager
 from typing import Any, Callable, Generator, List, Optional, Protocol, Self, Type
 
-from pika import channel, connection, spec
+# from pika import channel, connection, spec
 
-from .schema import Queue
-
+from kombu import Queue, Connection, Message
+from kombu.transport import virtual
 
 class handlerProtocol(Protocol):
     headers: dict
@@ -39,10 +39,8 @@ class ConsumerProtocol(Protocol):
 
     def callback(
         self,
-        channel: channel.Channel,
-        method: spec.Basic.Deliver,
-        properties: spec.BasicProperties,
-        body: bytes,
+        body: bytes, 
+        message: Message
     ):
         pass
 
@@ -61,19 +59,14 @@ class RabbitMQProtocol(Protocol):
         pass
 
     @contextmanager
-    def create_connection(self) -> Generator[connection.Connection, None, None]:
+    def create_connection(self) -> Generator[Connection, None, None]:
         pass
 
-    @contextmanager
-    def create_channel(
-        self,
-    ) -> Generator[channel.Channel, None, None]:
-        pass
 
     def publish(self, body: str, headers: Optional[dict], queue: Queue):
         pass
 
-    def create_consumer(self, channel: channel.Channel, consumer: ConsumerProtocol):
+    def create_consumer(self, channel: virtual.Channel, consumer: ConsumerProtocol):
         pass
 
     def register_consumers(self, consumers: List[Type[ConsumerProtocol]]):
